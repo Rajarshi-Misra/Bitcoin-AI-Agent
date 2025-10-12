@@ -1,8 +1,9 @@
-from crypto import get_crypto_price
 import os
+import time
 from dotenv import load_dotenv
 from together import Together
-import time
+
+from bitcoin_agent.crypto import get_crypto_price
 
 load_dotenv()
 os.getenv("TOGETHER_API_KEY")
