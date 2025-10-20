@@ -1,10 +1,10 @@
 from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from bitcoin_agent.db.base import Base, TimestampMixing
+from bitcoin_agent.db.base import Base, TimestampMixin
 # from bitcoin_agent.models.conversation import Conversation
 from typing import List
 
-class User(Base, TimestampMixing):
+class User(Base, TimestampMixin):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
