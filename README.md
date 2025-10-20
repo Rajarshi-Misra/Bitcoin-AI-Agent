@@ -1,71 +1,111 @@
-# AI AGENT FOR BITCOIN PRICES WITH SUPPORT FOR ALL LANGUAGES
-- It fetches bitcoin prices with caching and rate-limiting
-- It responds to any language-but the response is always in English
-- Uses LLaMA 3.1 8B from TogetherAI
+# Bitcoin AI Agent
 
-## Setup
-1. Clone the repository
-2. Install the dependencies: `pip install -r requirements.txt`
-3. Create a `.env` file and store the environment variables. Refer to the `example.env` file
+An intelligent Bitcoin assistant that provides real-time price information, answers questions about Bitcoin using the official whitepaper, and maintains conversation history. Built with FastAPI, PostgreSQL, and AI-powered RAG (Retrieval Augmented Generation).
 
-## Prompt Engineering
-1. Defining context and role:
-   ```
-   "You are a helpful and knowledgeable assistant designed to provide users with the current Bitcoin price in INR. ."
-   ```
-2. Integration of tool: We define some guidelines for the way it is supposed to work
-   ```
-   Use the provided tool to fetch Bitcoin prices whenever necessary. The tool's output is accurate and up-to-date.
-   ```
-3. Handling translation:
-   ```
-   If the user asks in a language other than English, summarize or translate their query into English and respond in English.
-   ```
-4. Ensuring a conversational guideline:
-   ```
-   Maintain a conversational tone and context for multi-turn conversations, ensuring users feel understood.
-   ```
-5. Description of crypto tool: We define the purpose of the crypto tool
-   ```
-   "description": "Get current price of bitcoin in INR",
-   ```
-6. Storing context
-   We store the user responses and responses from the assistant and provide them back for context
-7. Getting a response for the result from the function to get response from the assistant
-   ```
-   messages.append({
-                    "tool_call_id": response.choices[0].message.tool_calls[0].id,
-                    "role": "tool",
-                    "name": response.choices[0].message.tool_calls[0].function.name,
-                    "content": f"This is the price obtained from the function call in INR: {price}"
-        })
-   ```
-## Sample response
-```
-Enter your prompt. Type exit to quit
-User:Hi
-AGENT: It's nice to talk to you. Is there something specific you'd like to know or discuss? You can ask me anything, and I'll do my best to help. By the way, would you like to know the current price of Bitcoin in INR?
-User:Yes, please
-Searching...
-Fetching...
-AGENT: It seems like you're asking for the current Bitcoin price in INR, but I'm not sure what specifically you're looking for. Could you please clarify or ask a question, like "What's the current Bitcoin price in INR"?
+## What It Does
 
-I'll use the provided tool to fetch the latest price for you.
-User:Yes, I want the current price of BTC?
-Searching...
-AGENT: The current price of Bitcoin in INR is approximately ₹8,19,67,071. However, please note that the price may fluctuate rapidly and might be different at the time of your actual inquiry. I've fetched the price for you as of my knowledge cutoff.
-User:Namaste!
-AGENT: Namaste! How can I assist you with the current price of Bitcoin in INR?
-User:Bye
-AGENT: Have a good day!
-User:exit
+- **Bitcoin Price Queries** - Get current Bitcoin prices in INR with caching
+- **Knowledge Base Q&A** - Answer questions using Bitcoin whitepaper and documents
+- **Multi-language Support** - Understands queries in any language, responds in English
+- **Conversation History** - Maintains chat history for each user
+- **User Management** - Secure authentication and user accounts
+
+## How to Use
+
+### 1. Setup
+```bash
+# Start database and Redis
+docker-compose up -d
+
+# Setup database schema
+python -c "from bitcoin_agent.db.session import enable_pgvector; enable_pgvector()"
+alembic upgrade head
+
+# Load Bitcoin knowledge base
+python knowledge_base/scripts/ingest_docs.py
+
+# Start the API server
+uvicorn bitcoin_agent.api.app:app --reload
 ```
 
-## Assumptions & Limitations:
-1. The agent responds only in English, even if the user's input is in another language.
-2. The agent uses time-based cryptocurrency price caching and rate-limiting(up to 5 mins) to avoid redundant API calls. So, the rates can be
-   5 mins old.
-3. The translation capability is basic and relies on the LLaMA model's multilingual understanding.
-4. No streaming has been included in the code, which means the user will have to wait for the entire response
-5. The responses are kept short with the assumption that 100 tokens would be enough for the responses. The number of tokens per word is
-   assumed to be 1.5
+### 2. Register and Login
+```bash
+# Register a new user
+curl -X POST "http://localhost:8000/register" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "name": "John Doe", "password": "password123"}'
+
+# Login to get JWT token
+curl -X POST "http://localhost:8000/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password123"}'
+```
+
+### 3. Chat with the AI
+```bash
+# Ask about Bitcoin price
+curl -X POST "http://localhost:8000/chat" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is the current Bitcoin price?"}'
+
+# Ask about Bitcoin concepts
+curl -X POST "http://localhost:8000/chat" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "How does Bitcoin mining work?"}'
+```
+
+### 4. Search Knowledge Base
+```bash
+# Search Bitcoin whitepaper
+curl -X GET "http://localhost:8000/search?query=blockchain%20consensus&limit=3" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Environment Variables
+
+```env
+TOGETHER_API_KEY=your_key
+DATABASE_URL=postgresql://user:pass@localhost:5432/bitcoin_agent
+REDIS_URL=redis://localhost:6379/0
+SECRET_KEY=your_secret_key
+```
+
+## Example Usage
+
+### Price Queries
+```
+User: "What's the current Bitcoin price?"
+AI: "The current Bitcoin price is ₹8,19,67,071 INR. This price is updated every 5 minutes with caching to ensure accuracy."
+
+User: "Bitcoin कीमत क्या है?" (Hindi)
+AI: "The current Bitcoin price is ₹8,19,67,071 INR. I understand you asked in Hindi, but I respond in English for consistency."
+```
+
+### Knowledge Base Queries
+```
+User: "How does Bitcoin mining work?"
+AI: "Based on the Bitcoin whitepaper, mining works through a proof-of-work system where miners compete to solve cryptographic puzzles..."
+
+User: "What is the purpose of the blockchain?"
+AI: "According to the Bitcoin whitepaper, the blockchain serves as a public ledger that records all transactions in chronological order..."
+```
+
+## API Endpoints
+
+- `POST /register` - Create new user account
+- `POST /login` - Authenticate user and get JWT token
+- `POST /chat` - Send message to AI (requires authentication)
+- `GET /conversations` - Get user's conversation history
+- `GET /search` - Search Bitcoin knowledge base
+- `GET /docs` - Interactive API documentation at `http://localhost:8000/docs`
+
+## Tech Stack
+
+- **Backend**: FastAPI (Python)
+- **Database**: PostgreSQL with pgvector for vector search
+- **AI Model**: LLaMA 3.1 8B via Together AI
+- **Caching**: Redis
+- **Authentication**: JWT tokens
+- **Vector Search**: Sentence Transformers + pgvector
