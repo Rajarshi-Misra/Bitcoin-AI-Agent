@@ -3,3 +3,4 @@
 __pycache__/
 /bitcoin_agent.egg-info
 .bitcoin-agent/
+.DS_STORE
