@@ -26,7 +26,11 @@ def get_db() -> Generator[Session, None, None]:
 
 def enable_pgvector():
     """Enable pgvector extension in PostgreSQL"""
-    with engine.connect() as conn:
-        conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
-        conn.commit()
-    print("✓ pgvector extension enabled")
+    try:
+        with engine.begin() as conn:
+            # DDL statements (CREATE EXTENSION) need to be in a transaction
+            conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        print("✓ pgvector extension enabled")
+    except Exception as e:
+        print(f"⚠ Warning: Could not enable pgvector: {e}")
+        raise

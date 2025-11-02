@@ -6,7 +6,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
 
-from bitcoin_agent.db.session import get_db
+from bitcoin_agent.db.session import get_db, enable_pgvector
 from bitcoin_agent.services.auth_service import create_access_token, authenticate_user, get_current_user
 from bitcoin_agent.services.user_service import create_user
 from bitcoin_agent.services.conversation_service import (
@@ -18,6 +18,17 @@ from bitcoin_agent.agent import process_user_input
 from bitcoin_agent.models.user import User
 
 app = FastAPI(title="Bitcoin AI Agent API", version="1.0.0")
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database on startup"""
+    try:
+        # Enable pgvector extension
+        enable_pgvector()
+        print("✓ Application startup complete")
+    except Exception as e:
+        print(f"⚠ Warning: Could not initialize database: {e}")
+        print("⚠ The app will continue, but database features may not work")
 
 app.add_middleware(
     CORSMiddleware,
@@ -202,3 +213,14 @@ async def root():
         "docs": "/docs",
         "health": "/health"
     }
+
+def main():
+    """Main function to run the FastAPI application"""
+    import uvicorn
+    uvicorn.run(
+        "bitcoin_agent.api.app:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=False,
+        workers=1
+    )

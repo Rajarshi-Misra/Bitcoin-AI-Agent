@@ -51,7 +51,7 @@ bitcoin-agent = "bitcoin_agent.api.app:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["bitcoin_agent*"]
-exclude = ["tests*", "bitcoin*"]
+exclude = ["tests*"]
 
 [tool.black]
 line-length = 100

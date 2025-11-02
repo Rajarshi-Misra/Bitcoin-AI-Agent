@@ -1,0 +1,108 @@
+.
+├── __pycache__
+│   ├── crypto.cpython-313.pyc
+│   ├── main_api.cpython-313.pyc
+│   ├── main.cpython-313.pyc
+│   └── run.cpython-313.pyc
+├── alembic
+│   ├── __pycache__
+│   │   └── env.cpython-312.pyc
+│   ├── env.py
+│   ├── README
+│   ├── script.py.mako
+│   └── versions
+│       ├── __pycache__
+│       │   ├── 8ecd5db19255_initial_schema_with_pgvector.cpython-312.pyc
+│       │   ├── 9fce9952714f_initial_schema_with_all_tables.cpython-312.pyc
+│       │   └── bab12a5c76ff_create_all_tables.cpython-312.pyc
+│       └── 9fce9952714f_initial_schema_with_all_tables.py
+├── alembic.ini
+├── bitcoin_agent
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── __init__.cpython-313.pyc
+│   │   ├── agent.cpython-312.pyc
+│   │   ├── agent.cpython-313.pyc
+│   │   ├── config.cpython-312.pyc
+│   │   ├── crypto.cpython-312.pyc
+│   │   └── crypto.cpython-313.pyc
+│   ├── agent.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── __init__.cpython-313.pyc
+│   │   │   ├── app.cpython-312.pyc
+│   │   │   └── app.cpython-313.pyc
+│   │   └── app.py
+│   ├── config.py
+│   ├── crypto.py
+│   ├── db
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── base.cpython-312.pyc
+│   │   │   └── session.cpython-312.pyc
+│   │   ├── base.py
+│   │   ├── config.py
+│   │   └── session.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── conversation.cpython-312.pyc
+│   │   │   ├── document.cpython-312.pyc
+│   │   │   ├── message.cpython-312.pyc
+│   │   │   └── user.cpython-312.pyc
+│   │   ├── conversation.py
+│   │   ├── document.py
+│   │   ├── message.py
+│   │   └── user.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── auth_service.cpython-312.pyc
+│   │   │   ├── conversation_service.cpython-312.pyc
+│   │   │   ├── redis_service.cpython-312.pyc
+│   │   │   ├── user_service.cpython-312.pyc
+│   │   │   └── vector_service.cpython-312.pyc
+│   │   ├── auth_service.py
+│   │   ├── conversation_service.py
+│   │   ├── redis_service.py
+│   │   ├── user_service.py
+│   │   └── vector_service.py
+│   └── utils
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-312.pyc
+│       │   └── password.cpython-312.pyc
+│       └── password.py
+├── bitcoin_agent.egg-info
+│   ├── dependency_links.txt
+│   ├── entry_points.txt
+│   ├── PKG-INFO
+│   ├── requires.txt
+│   ├── SOURCES.txt
+│   └── top_level.txt
+├── docker-compose.yml
+├── Dockerfile
+├── example.env
+├── fly.toml
+├── knowledge_base
+│   ├── bitcoin_docs
+│   │   └── bitcoin_whitepaper.txt
+│   └── scripts
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-312.pyc
+│       │   └── ingest_docs.cpython-312.pyc
+│       └── ingest_docs.py
+├── project_structure.txt
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+└── run.py
+
+23 directories, 83 files
