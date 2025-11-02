@@ -8,3 +8,10 @@ build/
 *.egg-info/
 Dockerfile
 docker-compose.yml
+knowledge_base/
+*.md
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+project_structure.txt
